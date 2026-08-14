@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { CopyButton } from '../components/ui/CopyButton'
+import { Stat, Stats } from '../components/ui/Stat'
 import { useItemTitle } from '../i18n/catalog'
 import { formatBytes } from '../lib/format'
 import { executeClean, toErrorDescriptor, type ErrorDescriptor } from '../lib/ipc'
@@ -27,15 +29,9 @@ export function PlanReview({
   onExecuted: () => void
 }) {
   const { t } = useTranslation()
-  const [copied, setCopied] = useState(false)
   const [running, setRunning] = useState(false)
   const [outcome, setOutcome] = useState<CleanOutcome | null>(null)
   const [error, setError] = useState<ErrorDescriptor | null>(null)
-
-  const copy = async () => {
-    await navigator.clipboard.writeText(JSON.stringify(plan, null, 2))
-    setCopied(true)
-  }
 
   const run = async () => {
     setRunning(true)
@@ -59,7 +55,7 @@ export function PlanReview({
   return (
     <section className="plan">
       <div className="card__head">
-        <span className="card__title">{t('plan.title')}</span>
+        <h3 className="card__title">{t('plan.title')}</h3>
         <span className="card__path">
           {t('plan.mode')}: {t(trash ? 'plan.modeTrash' : 'plan.modePermanent')}
         </span>
@@ -69,9 +65,9 @@ export function PlanReview({
         {t(trash ? 'plan.confirmTrash' : 'plan.confirmPermanent')}
       </p>
 
-      <h3 className="plan__heading">
+      <h4 className="plan__heading">
         {t('plan.accepted')} · {t('plan.itemCount', { count: plan.accepted.length })}
-      </h3>
+      </h4>
       {plan.accepted.length === 0 ? (
         <p className="placeholder">{t('plan.nothingAccepted')}</p>
       ) : (
@@ -82,7 +78,7 @@ export function PlanReview({
         </ul>
       )}
 
-      <h3 className="plan__heading">{t('plan.rejected')}</h3>
+      <h4 className="plan__heading">{t('plan.rejected')}</h4>
       {plan.rejected.length === 0 ? (
         <p className="placeholder">{t('plan.noneRejected')}</p>
       ) : (
@@ -93,22 +89,23 @@ export function PlanReview({
         </ul>
       )}
 
-      <dl className="stats stats--tight">
-        <div className="stats__item">
-          <dt className="stats__label">{t('plan.estimated')}</dt>
-          <dd className="stats__value stats__value--ok num">
-            {formatBytes(plan.estimatedBytes, locale)}
-          </dd>
-        </div>
-      </dl>
+      <Stats tight>
+        <Stat
+          label={t('plan.estimated')}
+          value={formatBytes(plan.estimatedBytes, locale)}
+          tone="ok"
+        />
+      </Stats>
       <p className="plan__note">{t('plan.estimatedNote')}</p>
 
       {error && <p className="alert">{t(error.key, { detail: error.detail })}</p>}
 
       <div className="foot">
-        <button type="button" className="btn btn--quiet" onClick={() => void copy()}>
-          {t(copied ? 'plan.copied' : 'plan.copy')}
-        </button>
+        <CopyButton
+          value={JSON.stringify(plan, null, 2)}
+          label={t('plan.copy')}
+          copiedLabel={t('plan.copied')}
+        />
         <button type="button" className="btn" onClick={onClose} disabled={running}>
           {t('plan.close')}
         </button>
@@ -144,17 +141,17 @@ function OutcomeReport({
   const title = useItemTitle()
 
   return (
-    <section className="plan">
+    <section className="plan plan--outcome">
       <div className="card__head">
-        <span className="card__title">{t('outcome.title')}</span>
+        <h3 className="card__title">{t('outcome.title')}</h3>
         <span className="card__path num">
           {t('outcome.batch')}: {outcome.batch}
         </span>
       </div>
 
-      <h3 className="plan__heading">
+      <h4 className="plan__heading">
         {t('outcome.removed')} · {t('outcome.removedCount', { count: outcome.removed.length })}
-      </h3>
+      </h4>
       {outcome.removed.length === 0 ? (
         <p className="placeholder">{t('outcome.nothingRemoved')}</p>
       ) : (
@@ -180,25 +177,21 @@ function OutcomeReport({
           user approved; the measured one is what `df` will show them afterwards. */}
       {outcome.freedBytes !== null && (
         <>
-          <dl className="stats stats--tight">
-            <div className="stats__item">
-              <dt className="stats__label">{t('outcome.reported')}</dt>
-              <dd className="stats__value num">{formatBytes(outcome.bytes, locale)}</dd>
-            </div>
-            <div className="stats__item">
-              <dt className="stats__label">{t('outcome.freed')}</dt>
-              <dd className="stats__value stats__value--ok num">
-                {formatBytes(outcome.freedBytes, locale)}
-              </dd>
-            </div>
-          </dl>
+          <Stats tight>
+            <Stat label={t('outcome.reported')} value={formatBytes(outcome.bytes, locale)} />
+            <Stat
+              label={t('outcome.freed')}
+              value={formatBytes(outcome.freedBytes, locale)}
+              tone="ok"
+            />
+          </Stats>
           <p className="plan__note">{t('outcome.freedNote')}</p>
         </>
       )}
 
       {outcome.failed.length > 0 && (
         <>
-          <h3 className="plan__heading">{t('outcome.failed')}</h3>
+          <h4 className="plan__heading">{t('outcome.failed')}</h4>
           <ul className="plan__list">
             {outcome.failed.map((entry) => (
               <FailureRow key={entry.path} entry={entry} />
@@ -209,7 +202,7 @@ function OutcomeReport({
 
       {outcome.rejected.length > 0 && (
         <>
-          <h3 className="plan__heading">{t('outcome.rejected')}</h3>
+          <h4 className="plan__heading">{t('outcome.rejected')}</h4>
           <p className="plan__note">{t('outcome.rejectedNote')}</p>
           <ul className="plan__list">
             {outcome.rejected.map((rejection) => (

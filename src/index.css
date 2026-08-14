@@ -1,15 +1,47 @@
 :root {
-  --bg: #16181f;
-  --bg-elevated: #1e212b;
-  --bg-sunken: #12141a;
-  --border: #2c3140;
-  --text: #e8ebf2;
-  --text-dim: #949cb0;
-  --text-faint: #6b7285;
-  --accent: #4f8cd6;
-  --warn: #d6a24f;
-  --danger: #d9694f;
-  --ok: #56b189;
+  /* Four surface steps, not three: --bg-inset is the sidebar and the recessed row
+     panels, --bg-sunken the intermediate step up to --bg-elevated. All of them carry a
+     faint warm tint so nothing in the app reads as blue — colour is reserved for
+     meaning (--ok / --warn / --danger). */
+  --bg: #131316;
+  --bg-elevated: #1b1b1f;
+  --bg-sunken: #17171b;
+  --bg-inset: #0f0f12;
+  --border: #2a2a30;
+  --border-soft: #232328;
+  --hairline: rgba(255, 255, 255, 0.055);
+  --text: #ecebe8;
+  --text-dim: #a3a29d;
+  --text-faint: #6f6e6a;
+
+  /* The accent is near-white rather than a hue, so a coloured element in this app
+     always carries information. --accent-ink is what sits on top of it. */
+  --accent: #ecebe8;
+  --accent-hi: #f8f7f4;
+  --accent-lo: #d6d4cf;
+  --accent-ink: #131316;
+  --ok: #5fb98b;
+  --warn: #d3a154;
+  --danger: #d9654c;
+  /* Controls sit on top of --bg-elevated cards, so they need a step of their own to
+     read as raised rather than as part of the card. */
+  --ctl: #23232a;
+  --ctl-hi: #2c2c33;
+  /* Occupied disk space is material, not a verdict, so the bar gets its own neutral
+     pair instead of the accent (a wide white slab) or --ok (green means *freed*). */
+  --fill: #5c5c65;
+  --fill-hi: #7b7b85;
+
+  --r-card: 12px;
+  --r-panel: 10px;
+  --r-ctl: 7px;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.45), 0 14px 34px -20px rgba(0, 0, 0, 0.95);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --fast: 130ms;
+  --mid: 230ms;
+  /* Two rings: the inner one punches a gap in whatever surface is behind, so the ring
+     stays legible on --bg-inset and --bg-elevated alike. */
+  --focus: 0 0 0 2px var(--bg), 0 0 0 4px rgba(236, 235, 232, 0.55);
 
   color-scheme: dark;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
@@ -19,6 +51,10 @@
 
 * {
   box-sizing: border-box;
+  /* Selectable text is a liability in a tool whose rows represent real files: a stray
+     drag highlights a path and makes the row look picked. Declared on every element
+     rather than once on `body` — inheriting it did not hold in WKWebView. */
+  user-select: none;
 }
 
 html,
@@ -33,8 +69,6 @@ body {
   color: var(--text);
   /* The window is the app; the document itself must never scroll. */
   overflow: hidden;
-  /* Selectable text is a liability in a tool whose rows represent real files. */
-  user-select: none;
   cursor: default;
 }
 
@@ -47,4 +81,38 @@ button {
 /* Tabular figures keep byte counts from jittering as they update. */
 .num {
   font-variant-numeric: tabular-nums;
+}
+
+/* There is no keyboard affordance at all without this; :focus-visible keeps it off
+   pointer interactions. */
+.btn:focus-visible,
+.nav__item:focus-visible,
+.row__check:focus-visible,
+.locale__select:focus-visible,
+summary:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+
+  /* An indeterminate indicator that has stopped reads as a hung app, so the spinner
+     slows down instead of freezing. */
+  .spinner {
+    animation: spin 1.6s linear infinite !important;
+  }
+
+  /* The skeleton loses its sweep but keeps a visible fill; a 1ms-clamped gradient
+     animation would leave it stuck at whichever frame it started on. */
+  .skeleton__line {
+    animation: none !important;
+    background: var(--bg-sunken) !important;
+  }
 }

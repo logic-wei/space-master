@@ -4,6 +4,7 @@ export const zhCN: LocaleResource = {
   app: {
     name: 'SpaceMaster',
     tagline: 'macOS 磁盘空间清理',
+    nav: '功能区',
   },
   language: {
     label: '语言',

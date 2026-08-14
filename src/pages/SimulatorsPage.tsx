@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { ScanningState } from '../components/ui/ScanningState'
+import { Stat, Stats } from '../components/ui/Stat'
 import { formatBytes, formatLastUsed } from '../lib/format'
 import {
   deleteSimulators,
@@ -81,7 +83,7 @@ export function SimulatorsPage() {
     <section className="card">
       <div className="card__head">
         <div>
-          <span className="card__title">{t('simulators.title')}</span>
+          <h2 className="card__title">{t('simulators.title')}</h2>
           <p className="card__note">{t('simulators.intro')}</p>
         </div>
         <button type="button" className="btn" onClick={() => void load()} disabled={working}>
@@ -96,7 +98,8 @@ export function SimulatorsPage() {
       {report?.toolsPresent && devices.length === 0 && (
         <p className="placeholder">{t('simulators.empty')}</p>
       )}
-      {!report && !error && <p className="placeholder">{t('scan.scanning')}</p>}
+      {/* Listing is a single `xcrun` call, so there is no running total to report. */}
+      {!report && !error && <ScanningState bytes={0} locale={locale} />}
 
       {rows.length > 0 && (
         <>
@@ -123,18 +126,14 @@ export function SimulatorsPage() {
               {t(allSelected ? 'scan.selectNone' : 'scan.selectAll')}
             </button>
 
-            <dl className="stats stats--tight">
-              <div className="stats__item">
-                <dt className="stats__label">{t('scan.total')}</dt>
-                <dd className="stats__value num">{formatBytes(report?.bytes ?? 0, locale)}</dd>
-              </div>
-              <div className="stats__item">
-                <dt className="stats__label">{t('scan.selected')}</dt>
-                <dd className="stats__value stats__value--ok num">
-                  {formatBytes(selectedBytes, locale)}
-                </dd>
-              </div>
-            </dl>
+            <Stats tight>
+              <Stat label={t('scan.total')} value={formatBytes(report?.bytes ?? 0, locale)} />
+              <Stat
+                label={t('scan.selected')}
+                value={formatBytes(selectedBytes, locale)}
+                tone="ok"
+              />
+            </Stats>
 
             <button
               type="button"
@@ -158,12 +157,9 @@ export function SimulatorsPage() {
             {t('simulators.confirmTitle', { count: selected.size })}
           </h3>
           <p className="alert">{t('simulators.confirmBody')}</p>
-          <dl className="stats stats--tight">
-            <div className="stats__item">
-              <dt className="stats__label">{t('scan.selected')}</dt>
-              <dd className="stats__value num">{formatBytes(selectedBytes, locale)}</dd>
-            </div>
-          </dl>
+          <Stats tight>
+            <Stat label={t('scan.selected')} value={formatBytes(selectedBytes, locale)} />
+          </Stats>
           <div className="foot">
             <button
               type="button"
@@ -264,9 +260,9 @@ function Outcome({
   const { t } = useTranslation()
 
   return (
-    <section className="plan">
+    <section className="plan plan--outcome">
       <div className="card__head">
-        <span className="card__title">{t('simulators.removed')}</span>
+        <h3 className="card__title">{t('simulators.removed')}</h3>
         <span className="card__path num">
           {t('outcome.batch')}: {outcome.batch}
         </span>
@@ -290,25 +286,21 @@ function Outcome({
 
       {outcome.freedBytes !== null && (
         <>
-          <dl className="stats stats--tight">
-            <div className="stats__item">
-              <dt className="stats__label">{t('outcome.reported')}</dt>
-              <dd className="stats__value num">{formatBytes(outcome.bytes, locale)}</dd>
-            </div>
-            <div className="stats__item">
-              <dt className="stats__label">{t('simulators.freed')}</dt>
-              <dd className="stats__value stats__value--ok num">
-                {formatBytes(outcome.freedBytes, locale)}
-              </dd>
-            </div>
-          </dl>
+          <Stats tight>
+            <Stat label={t('outcome.reported')} value={formatBytes(outcome.bytes, locale)} />
+            <Stat
+              label={t('simulators.freed')}
+              value={formatBytes(outcome.freedBytes, locale)}
+              tone="ok"
+            />
+          </Stats>
           <p className="plan__note">{t('simulators.freedNote')}</p>
         </>
       )}
 
       {outcome.refused.length > 0 && (
         <>
-          <h3 className="plan__heading">{t('simulators.refusedTitle')}</h3>
+          <h4 className="plan__heading">{t('simulators.refusedTitle')}</h4>
           <ul className="plan__list">
             {outcome.refused.map((entry) => (
               <li className="plan__row plan__row--rejected" key={entry.udid}>
@@ -322,7 +314,7 @@ function Outcome({
 
       {outcome.failed.length > 0 && (
         <>
-          <h3 className="plan__heading">{t('simulators.failedTitle')}</h3>
+          <h4 className="plan__heading">{t('simulators.failedTitle')}</h4>
           <ul className="plan__list">
             {outcome.failed.map((entry) => (
               <li className="plan__row plan__row--rejected" key={entry.udid}>

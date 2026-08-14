@@ -2,6 +2,9 @@ import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { PrivacyNotice } from './PrivacyNotice'
+import { CopyButton } from './ui/CopyButton'
+import { ScanningState } from './ui/ScanningState'
+import { Stat, Stats } from './ui/Stat'
 import type { ScanState } from '../hooks/useScan'
 import { isAdvisoryId, isCatalogId, isNoteId } from '../i18n/catalog'
 import { formatBytes, formatLastUsed } from '../lib/format'
@@ -91,7 +94,7 @@ export function CleanPanel({
     <section className="card">
       <div className="card__head">
         <div>
-          <span className="card__title">{text.title}</span>
+          <h2 className="card__title">{text.title}</h2>
           <p className="card__note">{text.intro}</p>
         </div>
         {scan.status === 'scanning' ? (
@@ -118,13 +121,7 @@ export function CleanPanel({
           deletion we cannot honestly offer. */}
       <PrivacyNotice needed={unreadable} reason={t('scan.needsAccess')} />
 
-      {scan.status === 'scanning' && (
-        <p className="placeholder">
-          {scan.bytes > 0
-            ? t('scan.scanningFound', { size: formatBytes(scan.bytes, locale) })
-            : t('scan.scanning')}
-        </p>
-      )}
+      {scan.status === 'scanning' && <ScanningState bytes={scan.bytes} locale={locale} />}
 
       {scan.status === 'done' && scan.items.length === 0 && (
         <p className="placeholder">{text.empty}</p>
@@ -156,18 +153,14 @@ export function CleanPanel({
               {t(allSelected ? 'scan.selectNone' : 'scan.selectAll')}
             </button>
 
-            <dl className="stats stats--tight">
-              <div className="stats__item">
-                <dt className="stats__label">{t('scan.total')}</dt>
-                <dd className="stats__value num">{formatBytes(scan.bytes, locale)}</dd>
-              </div>
-              <div className="stats__item">
-                <dt className="stats__label">{t('scan.selected')}</dt>
-                <dd className="stats__value stats__value--ok num">
-                  {formatBytes(selectedBytes, locale)}
-                </dd>
-              </div>
-            </dl>
+            <Stats tight>
+              <Stat label={t('scan.total')} value={formatBytes(scan.bytes, locale)} />
+              <Stat
+                label={t('scan.selected')}
+                value={formatBytes(selectedBytes, locale)}
+                tone="ok"
+              />
+            </Stats>
 
             <button
               type="button"
@@ -287,7 +280,6 @@ function Row({
  */
 function Advisory({ advisory }: { advisory: AdvisoryRow }) {
   const { t } = useTranslation()
-  const [copied, setCopied] = useState(false)
   const id = advisory.id
   if (!isAdvisoryId(id)) return null
 
@@ -299,15 +291,11 @@ function Advisory({ advisory }: { advisory: AdvisoryRow }) {
         <p className="row__path num">{advisory.path}</p>
         <p className="row__path num">{advisory.command}</p>
       </div>
-      <button
-        type="button"
-        className="btn btn--quiet"
-        onClick={() => {
-          void navigator.clipboard.writeText(advisory.command).then(() => setCopied(true))
-        }}
-      >
-        {copied ? t('scan.copied') : t('scan.copyCommand')}
-      </button>
+      <CopyButton
+        value={advisory.command}
+        label={t('scan.copyCommand')}
+        copiedLabel={t('scan.copied')}
+      />
     </div>
   )
 }

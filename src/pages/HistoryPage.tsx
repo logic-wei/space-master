@@ -38,7 +38,7 @@ export function HistoryPage() {
     <section className="card">
       <div className="card__head">
         <div>
-          <span className="card__title">{t('history.title')}</span>
+          <h2 className="card__title">{t('history.title')}</h2>
           <p className="card__note">{t('history.intro')}</p>
         </div>
       </div>

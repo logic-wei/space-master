@@ -10,6 +10,8 @@ export const en = {
   app: {
     name: 'SpaceMaster',
     tagline: 'Reclaim disk space on macOS',
+    /* Names the nav landmark for screen readers; never rendered. */
+    nav: 'Sections',
   },
   language: {
     label: 'Language',

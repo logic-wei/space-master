@@ -35,10 +35,10 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { message:
 function Crashed({ message }: { message: string }) {
   const { t } = useTranslation()
   return (
-    <main className="shell">
+    <main className="crash">
       <section className="card">
         <div className="card__head">
-          <span className="card__title">{t('crash.title')}</span>
+          <h2 className="card__title">{t('crash.title')}</h2>
         </div>
         <p className="card__note">{t('crash.body')}</p>
         <p className="row__path num">{message}</p>

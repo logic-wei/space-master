@@ -6,9 +6,10 @@ import {
   unfinishedBatches,
   type ErrorDescriptor,
 } from './lib/ipc'
-import { formatBytes } from './lib/format'
 import type { UnfinishedBatch, VolumeInfo } from './lib/types'
-import { LocalePicker } from './components/LocalePicker'
+import { Sidebar } from './components/Sidebar'
+import type { Tab } from './lib/tabs'
+import { VolumeSummary } from './components/VolumeSummary'
 import { DevCachesPage } from './pages/DevCachesPage'
 import { HistoryPage } from './pages/HistoryPage'
 import { OrphansPage } from './pages/OrphansPage'
@@ -16,9 +17,6 @@ import { QuickCleanPage } from './pages/QuickCleanPage'
 import { SimulatorsPage } from './pages/SimulatorsPage'
 import { XcodePage } from './pages/XcodePage'
 import './App.css'
-
-const TABS = ['quick', 'dev', 'xcode', 'simulators', 'orphans', 'history'] as const
-type Tab = (typeof TABS)[number]
 
 const PAGES: Record<Tab, () => React.JSX.Element> = {
   quick: QuickCleanPage,
@@ -51,40 +49,36 @@ export default function App() {
   }, [])
 
   return (
-    <main className="shell">
-      <header className="shell__head">
-        <div>
-          <h1 className="shell__title">{t('app.name')}</h1>
-          <p className="shell__sub">{t('app.tagline')}</p>
+    <div className="app">
+      <Sidebar
+        tab={tab}
+        onSelect={setTab}
+        footer={
+          volume ? (
+            <VolumeSummary volume={volume} />
+          ) : (
+            /* A failed statfs is a line in the footer rather than a banner over the
+               page: it says nothing about what the user came here to do. */
+            <p className={`side__note${error ? ' side__note--error' : ''}`}>
+              {error ? t(error.key, { detail: error.detail }) : t('volume.loading')}
+            </p>
+          )
+        }
+      />
+
+      <main className="main">
+        <UnfinishedNotice />
+
+        {/* Mounted one at a time on purpose. The backend keeps the paths of a single
+            scan, so a report left on a hidden page would resolve its ids against someone
+            else's scan; the unmount is also what cancels the walk the outgoing page left
+            running. The key is for this wrapper, which would otherwise survive the switch
+            and never replay `pageIn`. */}
+        <div className="page" key={tab}>
+          <Page />
         </div>
-        <LocalePicker />
-      </header>
-
-      <UnfinishedNotice />
-
-      {error && <p className="alert">{t(error.key, { detail: error.detail })}</p>}
-      {!error && !volume && <p className="placeholder">{t('volume.loading')}</p>}
-      {volume && <VolumeCard volume={volume} />}
-
-      <nav className="tabs">
-        {TABS.map((id) => (
-          <button
-            key={id}
-            type="button"
-            className={`tab${tab === id ? ' tab--on' : ''}`}
-            aria-current={tab === id}
-            onClick={() => setTab(id)}
-          >
-            {t(`${id}.title`)}
-          </button>
-        ))}
-      </nav>
-
-      {/* Mounted one at a time on purpose. The backend keeps the paths of a single
-          scan, so a report left on a hidden page would resolve its ids against
-          someone else's scan — and unmounting cancels the walk it left running. */}
-      <Page />
-    </main>
+      </main>
+    </div>
   )
 }
 
@@ -119,49 +113,5 @@ function UnfinishedNotice() {
         {t('ledger.dismiss')}
       </button>
     </p>
-  )
-}
-
-function VolumeCard({ volume }: { volume: VolumeInfo }) {
-  const { t, i18n } = useTranslation()
-  const locale = i18n.language
-  const usedRatio = volume.totalBytes > 0 ? volume.usedBytes / volume.totalBytes : 0
-
-  return (
-    <section className="card">
-      <div className="card__head">
-        <span className="card__title">{t('volume.title')}</span>
-        <span className="card__path num">{volume.mountPoint}</span>
-      </div>
-
-      <div
-        className="bar"
-        role="img"
-        aria-label={t('volume.usedPercent', { percent: Math.round(usedRatio * 100) })}
-      >
-        <div className="bar__fill" style={{ width: `${usedRatio * 100}%` }} />
-      </div>
-
-      <dl className="stats">
-        <Stat
-          label={t('volume.available')}
-          value={formatBytes(volume.availableBytes, locale)}
-          tone="ok"
-        />
-        <Stat label={t('volume.used')} value={formatBytes(volume.usedBytes, locale)} />
-        <Stat label={t('volume.total')} value={formatBytes(volume.totalBytes, locale)} />
-      </dl>
-    </section>
-  )
-}
-
-function Stat({ label, value, tone }: { label: string; value: string; tone?: 'ok' }) {
-  return (
-    <div className="stats__item">
-      <dt className="stats__label">{label}</dt>
-      <dd className={`stats__value num${tone === 'ok' ? ' stats__value--ok' : ''}`}>
-        {value}
-      </dd>
-    </div>
   )
 }

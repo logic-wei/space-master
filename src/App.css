@@ -1,31 +1,179 @@
-/* The document never scrolls (see index.css), so this is the scroll container. */
-.shell {
+/* Grid rather than flex: a long localised nav label can widen a flex item, and the
+   content pane must not be squeezed by the sidebar. */
+.app {
+  display: grid;
+  grid-template-columns: 232px 1fr;
   height: 100%;
-  overflow-y: auto;
-  padding: 40px 44px;
+  overflow: hidden;
+}
+
+.side {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 20px;
+  padding: 22px 14px 18px;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+  background: var(--bg-inset);
 }
 
-.shell__head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 24px;
+.side__brand {
+  padding: 0 8px;
 }
 
-.shell__title {
+.side__title {
   margin: 0;
-  font-size: 22px;
+  font-size: 15px;
   font-weight: 600;
   letter-spacing: -0.01em;
 }
 
-.shell__sub {
-  margin: 4px 0 0;
-  font-size: 13px;
+.side__sub {
+  margin: 3px 0 0;
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+.side__spacer {
+  flex: 1;
+}
+
+/* Holds the volume figures and the language picker. Both need to line up with the
+   brand rather than with the nav items, which carry their own inset. */
+.side__foot {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 8px;
+}
+
+.side__note {
+  margin: 0;
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+.side__note--error {
+  color: var(--danger);
+}
+
+.vol {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.vol__label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.vol__path {
+  font-size: 11px;
+  color: var(--text-faint);
+  overflow-wrap: anywhere;
+}
+
+.vol__free {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.vol__figure {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ok);
+}
+
+.vol__rest {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 0;
+}
+
+.vol__line {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 11px;
   color: var(--text-dim);
+}
+
+.vol__line dt {
+  color: var(--text-faint);
+}
+
+.vol__line dd {
+  margin: 0;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav__item {
+  position: relative;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--r-ctl);
+  background: none;
+  color: var(--text-dim);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background var(--fast) var(--ease),
+    color var(--fast) var(--ease);
+}
+
+.nav__item:hover {
+  color: var(--text);
+}
+
+.nav__item--on {
+  border-color: var(--border-soft);
+  background: var(--bg-elevated);
+  box-shadow: inset 0 1px 0 var(--hairline);
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* The only near-white in the sidebar, which is what makes it read as an indicator
+   rather than as a filled button. */
+.nav__item--on::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 7px;
+  bottom: 7px;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--accent);
+}
+
+.main {
+  min-width: 0;
+  overflow-y: auto;
+  padding: 32px 36px 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Keyed on the active section in App, so switching sections replaces this node and the
+   animation runs again. */
+.page {
+  min-width: 0;
+  animation: pageIn 250ms var(--ease);
 }
 
 .placeholder {
@@ -37,9 +185,9 @@
 .alert {
   margin: 0;
   padding: 12px 14px;
-  border: 1px solid rgba(217, 105, 79, 0.4);
-  border-radius: 8px;
-  background: rgba(217, 105, 79, 0.1);
+  border: 1px solid rgba(217, 101, 76, 0.38);
+  border-radius: var(--r-panel);
+  background: rgba(217, 101, 76, 0.1);
   color: var(--danger);
   font-size: 13px;
 }
@@ -47,8 +195,19 @@
 .card {
   padding: 22px 24px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--r-card);
   background: var(--bg-elevated);
+  /* The hairline is the top edge catching the light; the shadow lifts the card off
+     the window background. Together they are the whole of direction B. */
+  box-shadow: var(--shadow-card), inset 0 1px 0 var(--hairline);
+  animation: cardIn 420ms var(--ease) backwards;
+}
+
+/* A panel that belongs to the card it sits inside: recessed instead of raised. */
+.card--inset {
+  border-color: var(--border-soft);
+  background: var(--bg-sunken);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .card__head {
@@ -60,8 +219,10 @@
 }
 
 .card__title {
-  font-size: 14px;
+  margin: 0;
+  font-size: 15px;
   font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .card__path {
@@ -69,33 +230,56 @@
   color: var(--text-faint);
 }
 
+.card__note {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--text-dim);
+  max-width: 62ch;
+}
+
 .bar {
-  height: 10px;
-  border-radius: 5px;
-  background: var(--bg-sunken);
+  height: 8px;
+  border-radius: 4px;
+  background: var(--bg-inset);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
   overflow: hidden;
 }
 
 .bar__fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent), #6ba3e6);
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--fill), var(--fill-hi));
+  /* Slow enough to be read as the bar receding after a clean, rather than as a redraw. */
+  transition: width 520ms var(--ease);
 }
 
 .stats {
   display: flex;
-  gap: 40px;
+  gap: 10px;
   margin: 20px 0 0;
+  padding: 0;
 }
 
+/* Each figure in its own recessed tile, so a number is never mistaken for prose. */
 .stats__item {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-panel);
+  background: var(--bg-sunken);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.028);
 }
 
 .stats__label {
-  font-size: 12px;
-  color: var(--text-dim);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .stats__value {
@@ -109,11 +293,20 @@
   color: var(--ok);
 }
 
-.card__note {
-  margin: 4px 0 0;
-  font-size: 12px;
-  color: var(--text-dim);
-  max-width: 62ch;
+.stats--tight {
+  margin: 0;
+  gap: 8px;
+}
+
+/* In a foot bar the tiles sit between two buttons, so they size to their content
+   instead of splitting the width. */
+.stats--tight .stats__item {
+  flex: none;
+  padding: 7px 12px;
+}
+
+.stats--tight .stats__value {
+  font-size: 14px;
 }
 
 .notice {
@@ -123,9 +316,10 @@
   gap: 12px;
   margin: 0 0 16px;
   padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-panel);
   background: var(--bg-sunken);
+  box-shadow: inset 0 1px 0 var(--hairline);
   color: var(--text-dim);
   font-size: 12px;
 }
@@ -136,69 +330,75 @@
   align-items: flex-start;
 }
 
-.tabs {
-  display: flex;
-  gap: 4px;
-  margin: 0 0 16px;
-}
-
-.tab {
-  padding: 7px 14px;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  background: none;
-  color: var(--text-dim);
-  font: inherit;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.tab:hover {
-  color: var(--text);
-}
-
-.tab--on {
-  border-color: var(--border);
-  background: var(--bg-elevated);
-  color: var(--text);
-  font-weight: 600;
+/* The crash screen replaces the whole shell, so it supplies its own window padding. */
+.crash {
+  height: 100%;
+  overflow-y: auto;
+  padding: 40px 44px;
 }
 
 .btn {
   padding: 6px 14px;
   border: 1px solid var(--border);
-  border-radius: 7px;
-  background: var(--bg-elevated);
+  border-radius: var(--r-ctl);
+  background: var(--ctl);
   color: var(--text);
   font: inherit;
   font-size: 13px;
   cursor: pointer;
+  box-shadow: inset 0 1px 0 var(--hairline);
+  transition:
+    background var(--fast) var(--ease),
+    border-color var(--fast) var(--ease),
+    transform var(--fast) var(--ease);
 }
 
 .btn:hover:not(:disabled) {
   border-color: var(--text-faint);
+  background: var(--ctl-hi);
+}
+
+/* Physical click feedback. The guard matters: a disabled button that still depresses
+   claims it did something. */
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
 }
 
 .btn:disabled {
-  opacity: 0.45;
+  opacity: 0.38;
   cursor: default;
 }
 
+/* Near-white on a dark card is loud by construction, which is why no view offers more
+   than one of these. */
 .btn--primary {
   border-color: transparent;
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-ink);
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .btn--primary:hover:not(:disabled) {
   border-color: transparent;
-  filter: brightness(1.08);
+  background: var(--accent-hi);
+}
+
+.btn--primary:active:not(:disabled) {
+  background: var(--accent-lo);
 }
 
 .btn--quiet {
   border-color: transparent;
   background: none;
+  box-shadow: none;
   color: var(--text-dim);
+}
+
+.btn--quiet:hover:not(:disabled) {
+  border-color: transparent;
+  background: var(--ctl);
+  color: var(--text);
 }
 
 /* One confidence bucket on the leftovers page. */
@@ -211,6 +411,7 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
+  margin-bottom: 8px;
   cursor: pointer;
   list-style-position: outside;
 }
@@ -251,16 +452,16 @@
 
 .chip {
   padding: 2px 8px;
-  border: 1px solid rgba(86, 177, 137, 0.4);
+  border: 1px solid rgba(95, 185, 139, 0.38);
   border-radius: 999px;
-  background: rgba(86, 177, 137, 0.1);
+  background: rgba(95, 185, 139, 0.1);
   color: var(--ok);
   font-size: 11px;
 }
 
 .chip--against {
-  border-color: rgba(214, 162, 79, 0.4);
-  background: rgba(214, 162, 79, 0.1);
+  border-color: rgba(211, 161, 84, 0.38);
+  background: rgba(211, 161, 84, 0.1);
   color: var(--warn);
 }
 
@@ -288,20 +489,40 @@
   margin: 0;
 }
 
+/* A recessed panel holding the rows, so the list reads as contents rather than as
+   more card. */
 .rows {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-panel);
+  background: var(--bg-sunken);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+/* History renders its list unconditionally, and an empty bordered panel looks like a
+   row that failed to draw. */
+.rows:empty {
+  display: none;
 }
 
 .row {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  padding: 12px 0;
-  border-top: 1px solid var(--border);
+  padding: 12px 14px;
+  transition: background var(--fast) var(--ease);
+}
+
+/* Dividers between rows only: a rule above the first one would double the panel edge. */
+.row + .row {
+  border-top: 1px solid var(--border-soft);
+}
+
+.row:hover {
+  background: rgba(255, 255, 255, 0.022);
 }
 
 .row--empty {
@@ -367,35 +588,40 @@
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  margin-top: 20px;
+  margin-top: 18px;
   padding-top: 18px;
-  border-top: 1px solid var(--border);
-}
-
-.stats--tight {
-  margin: 0;
-  gap: 28px;
-}
-
-.stats--tight .stats__value {
-  font-size: 15px;
+  border-top: 1px solid var(--border-soft);
 }
 
 .plan {
   margin-top: 20px;
   padding: 20px 22px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-card);
   background: var(--bg-sunken);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+  /* Drops in from above rather than fading: the panel is the consequence of the button
+     that sits above it, and this is the last moment before anything is deleted. */
+  animation: planIn 300ms var(--ease) backwards;
+}
+
+/* The freed figure, once. Scoped to the outcome panel so the plan's estimate — the same
+   markup, a number nobody has earned yet — stays still. */
+.plan--outcome .stats__value--ok {
+  animation: bloom 900ms var(--ease) 120ms backwards;
+}
+
+.plan--outcome .stats__item:has(.stats__value--ok) {
+  animation: tileGlow 1100ms var(--ease) 100ms backwards;
 }
 
 .plan__heading {
   margin: 18px 0 8px;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   color: var(--text-dim);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.07em;
 }
 
 .plan__list {
@@ -409,7 +635,7 @@
   align-items: baseline;
   gap: 12px;
   padding: 6px 0;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-soft);
   font-size: 12px;
 }
 
@@ -462,6 +688,84 @@
   max-width: 70ch;
 }
 
+.scanning {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.scanning__line {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.spinner {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+}
+
+/* Shaped like the list it is standing in for, so the layout does not jump when the
+   real rows arrive. */
+.skeleton {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-panel);
+  background: var(--bg-sunken);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.skeleton__row {
+  padding: 14px;
+}
+
+.skeleton__row + .skeleton__row {
+  border-top: 1px solid var(--border-soft);
+}
+
+.skeleton__line {
+  height: 9px;
+  border-radius: 5px;
+  background: linear-gradient(
+    90deg,
+    var(--bg-inset) 0%,
+    var(--border) 42%,
+    var(--bg-inset) 84%
+  );
+  background-size: 260% 100%;
+  animation: sweepbg 1.5s ease-in-out infinite;
+}
+
+.skeleton__line--sub {
+  height: 7px;
+  width: 38%;
+  margin-top: 9px;
+}
+
+/* Uneven widths; three identical bars read as a progress control. */
+.skeleton__row:nth-child(1) .skeleton__line:first-child {
+  width: 82%;
+}
+
+.skeleton__row:nth-child(2) .skeleton__line:first-child {
+  width: 64%;
+}
+
+.skeleton__row:nth-child(3) .skeleton__line:first-child {
+  width: 74%;
+}
+
 .locale {
   display: flex;
   align-items: center;
@@ -474,7 +778,63 @@
   padding: 4px 8px;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background: var(--bg-elevated);
+  background: var(--ctl);
   color: var(--text);
   font: inherit;
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+}
+
+@keyframes planIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.99);
+  }
+}
+
+@keyframes bloom {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+/* Settles onto the tile's resting border and inset highlight, so the end state has to
+   match `.stats__item` exactly or the tile jumps when the animation ends. */
+@keyframes tileGlow {
+  from {
+    border-color: rgba(95, 185, 139, 0.7);
+    box-shadow: 0 0 24px -6px rgba(95, 185, 139, 0.55);
+  }
+  to {
+    border-color: var(--border-soft);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.028);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes sweepbg {
+  from {
+    background-position: -40% 0;
+  }
+  to {
+    background-position: 140% 0;
+  }
 }

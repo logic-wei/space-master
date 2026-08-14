@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { PrivacyNotice } from '../components/PrivacyNotice'
+import { ScanningState } from '../components/ui/ScanningState'
+import { Stat, Stats } from '../components/ui/Stat'
 import { formatBytes } from '../lib/format'
 import {
   cancelScan,
@@ -165,7 +167,7 @@ export function OrphansPage() {
     <section className="card">
       <div className="card__head">
         <div>
-          <span className="card__title">{t('orphans.title')}</span>
+          <h2 className="card__title">{t('orphans.title')}</h2>
           <p className="card__note">{t('orphans.intro')}</p>
         </div>
         {scanning ? (
@@ -182,13 +184,7 @@ export function OrphansPage() {
       {error && <p className="alert">{t(error.key, { detail: error.detail })}</p>}
       {report?.cancelled && <p className="notice">{t('scan.cancelled')}</p>}
 
-      {scanning && (
-        <p className="placeholder">
-          {bytes > 0
-            ? t('scan.scanningFound', { size: formatBytes(bytes, locale) })
-            : t('scan.scanning')}
-        </p>
-      )}
+      {scanning && <ScanningState bytes={bytes} locale={locale} />}
 
       {/* Not an error: the feature declines to answer rather than answering badly. */}
       {report && !report.reliable && (
@@ -221,23 +217,20 @@ export function OrphansPage() {
           ))}
 
           <div className="foot">
-            <dl className="stats stats--tight">
-              <div className="stats__item">
-                <dt className="stats__label">{t('orphans.offered')}</dt>
-                <dd className="stats__value num">
-                  {formatBytes(
-                    offered.reduce((n, r) => n + r.bytes, 0),
-                    locale,
-                  )}
-                </dd>
-              </div>
-              <div className="stats__item">
-                <dt className="stats__label">{t('scan.selected')}</dt>
-                <dd className="stats__value stats__value--ok num">
-                  {formatBytes(selectedBytes, locale)}
-                </dd>
-              </div>
-            </dl>
+            <Stats tight>
+              <Stat
+                label={t('orphans.offered')}
+                value={formatBytes(
+                  offered.reduce((n, r) => n + r.bytes, 0),
+                  locale,
+                )}
+              />
+              <Stat
+                label={t('scan.selected')}
+                value={formatBytes(selectedBytes, locale)}
+                tone="ok"
+              />
+            </Stats>
 
             <button
               type="button"
