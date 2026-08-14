@@ -9,7 +9,8 @@ one-click cleaning of caches their owning tool rebuilds (deleted permanently), a
 mode covering developer caches, Xcode/simulator junk, and leftovers of uninstalled apps (always to
 the Trash).
 
-`README.md` is still the unmodified Vite template and describes nothing about this app. Ignore it.
+`README.md` describes the same design for a human reader. This file covers what that one leaves
+out — the traps, and the reasoning a contributor would otherwise have to reconstruct.
 
 ## Commands
 
