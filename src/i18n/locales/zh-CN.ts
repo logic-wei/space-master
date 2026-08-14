@@ -1,0 +1,363 @@
+import type { LocaleResource } from './en'
+
+export const zhCN: LocaleResource = {
+  app: {
+    name: 'SpaceMaster',
+    tagline: 'macOS 磁盘空间清理',
+  },
+  language: {
+    label: '语言',
+    'en': 'English',
+    'zh-CN': '简体中文',
+  },
+  volume: {
+    title: '数据卷',
+    loading: '正在读取磁盘信息…',
+    available: '可用',
+    used: '已用',
+    total: '总容量',
+    usedPercent: '已用 {{percent}}%',
+  },
+  quick: {
+    title: '一键清理',
+    intro: '这些缓存由对应工具自动重建。删掉只是重新下载一次，不会丢失任何你的成果。',
+    empty: '没有发现可清理的内容。',
+  },
+  dev: {
+    title: '开发者缓存',
+    intro:
+      '包管理器仓库、构建缓存、下载的模型。这些都不是你的成果，但重建要花时间，所以一律移到废纸篓而不是直接删除。',
+    empty: '没有发现开发者缓存。',
+    unknownCache: '~/.cache 下的目录。我们不知道它属于哪个工具，请先看它上次被使用的时间再决定。',
+  },
+  xcode: {
+    title: 'Xcode',
+    intro:
+      '设备符号、构建产物和归档。这些条目的名字是 Xcode 起的，不是我们起的 —— 勾选前请先看说明，确认这一行到底是什么。这里的内容一律移到废纸篓。',
+    empty: '没有发现 Xcode 缓存。',
+  },
+  simulators: {
+    title: '模拟器',
+    intro:
+      '每个模拟器都保存着自己那一份「装过的所有东西」。删除会连设备本身一起删掉 —— Xcode 里不再列出它，需要时从 Window ▸ Devices and Simulators 重新创建。',
+    empty: '没有发现模拟器。',
+    noTools:
+      '没有找到 Xcode 命令行工具，无法列出模拟器。请安装 Xcode，或运行 xcode-select --install。',
+    neverBooted: '从未启动过',
+    running: '正在运行 —— 请先退出「模拟器」App 再删除',
+    unavailable: '它需要的运行时已经不在了，这个设备无法启动。',
+    sizeNote:
+      '这里的体积来自 simctl，它给的是之前记录下来的数值，不是当场统计的。你在那之后用过的设备实际上比显示的更大，所以删除通常会比上面的数字多释放一些。',
+    delete: '删除模拟器',
+    deleteHint: '请至少选择一个模拟器。',
+    confirmTitle: '确认删除 {{count}} 个模拟器？',
+    confirmBody:
+      '这会执行 xcrun simctl delete。模拟器没有废纸篓：设备和上面装的一切都会消失，重新创建出来的是一个空设备。',
+    confirm: '永久删除',
+    cancel: '保留',
+    working: '正在删除…',
+    removed: '已删除',
+    freed: '已释放空间',
+    freedNote:
+      '「已释放空间」是在卷上实测的，也就是 `df` 认可的那个数字。它通常会比上面报告的体积更大，因为 simctl 给出的体积是设备最后一次使用之前记录的。',
+    nothingRemoved: '没有删除任何模拟器。',
+    refusedTitle: '未被删除',
+    failedTitle: 'simctl 报告了错误',
+    refusals: {
+      booted: '执行到它时它正在运行。',
+      unknown: '它已经不存在了。',
+    },
+    done: '完成',
+  },
+  orphans: {
+    title: '残留文件',
+    intro:
+      '以某个已不再安装的软件命名的缓存、配置和容器。每一条都需要判断，所以这里列出的是证据而不是结论 —— 并且一律移入废纸篓。',
+    empty: '没有发现可能属于已卸载软件的数据。',
+    unreliable:
+      '已安装应用清单不完整，因此残留检测被整体关闭：识别出 {{named}} 个，另有 {{unnamed}} 个无法识别。漏掉一个应用会让它的全部数据看起来都像是被遗弃的，所以宁可不给答案，也不给错答案。',
+    offered: '可清理',
+    rowCount: '{{count}} 项',
+    placeCount: '{{count}} 处',
+    notMeasured: '未统计',
+    showPlaces: '查看位置',
+    hidePlaces: '收起位置',
+    reveal: '在 Finder 中显示',
+    trashNote: '这些只会移入废纸篓，不会直接删除 —— 判断错了，代价只是去废纸篓走一趟。',
+    needsAccess:
+      '其中有些是 app 容器，macOS 对它们有保护。没有「完全磁盘访问权限」时可以统计体积，但无法移入废纸篓 —— 真去删就会在中途因权限被拒绝。',
+    buckets: {
+      likely: '几乎确定是残留',
+      possible: '很可能是残留',
+      unclear: '需要你来判断',
+      keep: '已保护',
+    },
+    bucketNotes: {
+      likely: '没有任何证据支持保留，因此默认已勾选。',
+      possible: '证据倾向于删除，但不足以确定。展开一行，看清数据在哪里之后再勾选。',
+      unclear: '这里的证据两边都有。本页无法勾选它们 —— 请在 Finder 中查看后自行决定。',
+      keep: '不提供删除。仍然列出，让你看到我们检查过哪些、以及为什么排除了它们。',
+    },
+    protected: {
+      system: '属于 macOS 或 Apple 自带的软件。',
+      ownData: '这是 SpaceMaster 自己的数据。',
+      installed: '拥有它的应用仍然安装着。',
+      installedFamily: '这一系列中有已安装的应用，而共享容器是以系列名而非应用名命名的。',
+      launchdJob: '有后台任务以这个名字注册。',
+      running: '此 bundle 的进程正在运行。',
+    },
+    evidence: {
+      unusedOver180d: '半年未改动',
+      unusedOver1y: '一年未改动',
+      unusedOver2y: '两年未改动',
+      recentActivity: '本月有写入',
+      ageUnknown: '无法判断时间',
+      manyLocations: '出现在多个位置',
+      onlyPreferences: '只有一个配置文件',
+      standardId: '标准 Bundle ID',
+      shortId: 'ID 段数偏少',
+      sameVendor: '与已安装应用同一厂商',
+      holdsDatabase: '含有数据库',
+      large: '体积较大',
+      tiny: '只有几 KB',
+    },
+    where: {
+      caches: '缓存',
+      preferences: '偏好设置',
+      applicationSupport: 'Application Support',
+      containers: '容器',
+      groupContainers: '共享容器',
+      savedState: '窗口状态',
+      logs: '日志',
+      webKit: 'WebKit 数据',
+      httpStorages: 'HTTP 存储',
+      applicationScripts: 'Application Scripts',
+    },
+  },
+  notes: {
+    deviceSupport:
+      '某个 iOS 版本的符号，从 Xcode 调试过的设备上拷下来的。下次连接该设备时 Xcode 会重新提取，需要几分钟。',
+    derivedData: '某个项目的构建产物、索引和模块缓存。删掉只是下次要全量重新构建，与源码无关。',
+    archives:
+      '你归档过的一个构建版本，含 dSYM。删掉之后这个版本的崩溃日志就再也无法符号化 —— 已经发布出去的版本请留着。',
+  },
+  /** Strings shared by every scan screen. */
+  scan: {
+    scan: '扫描',
+    rescan: '重新扫描',
+    scanning: '正在扫描…',
+    scanningFound: '正在扫描…已发现 {{size}}',
+    cancel: '取消',
+    cancelled: '扫描已取消，下面的数字只包含已完成的部分。',
+    total: '可回收',
+    selected: '已选择',
+    selectAll: '全选',
+    selectNone: '取消全选',
+    review: '查看清理计划',
+    reviewHint: '请至少选择一项。',
+    alreadyEmpty: '已经是空的',
+    sizeUnknown: '大小未知',
+    needsPermission: '没有「完全磁盘访问权限」就读不到这个目录，因此无法得知它的大小。',
+    needsAccess:
+      '这里有目录在没有「完全磁盘访问权限」时读不到。macOS 允许往废纸篓里丢东西，却不允许列出里面已有的内容，所以体积显示为未知。',
+    fileCount: '{{count}} 个文件',
+    lastUsed: '{{when}}使用过',
+    scopeChildren: '只清空内容，保留文件夹本身。',
+    issues: '测量时跳过了 {{count}} 个条目',
+    copyCommand: '复制命令',
+    copied: '已复制',
+  },
+  plan: {
+    title: '清理计划',
+    confirmTrash:
+      '这些条目会被移到废纸篓。你可以在 Finder 里放回原处；在清空废纸篓之前，空间不会真正释放。',
+    confirmPermanent: '这些条目会被永久删除，无法撤销。',
+    mode: '方式',
+    modeTrash: '移到废纸篓',
+    modePermanent: '永久删除',
+    accepted: '将被删除',
+    itemCount: '{{count}} 个条目',
+    nothingAccepted: '这次选择中没有任何条目可以删除。',
+    rejected: '被安全规则拒绝',
+    noneRejected: '没有任何条目被拒绝。',
+    estimated: '预计释放空间',
+    estimatedNote: '这是上限。与别处共享存储的文件，实际释放会少于它报告的大小。',
+    copy: '复制为 JSON',
+    copied: '已复制',
+    close: '关闭',
+    executeTrash: '移到废纸篓',
+    executePermanent: '永久删除',
+    executing: '正在处理…',
+    directory: '文件夹',
+    file: '文件',
+  },
+  outcome: {
+    title: '清理完成',
+    removed: '已删除',
+    removedCount: '{{count}} 个条目',
+    trashNote: '以上内容都在废纸篓里。清空废纸篓后空间才会释放；在那之前都可以放回原处。',
+    permanentNote: '以上内容已经从磁盘上移除。',
+    reported: '报告大小',
+    freed: '实际释放',
+    freedNote:
+      '「实际释放」是在磁盘上实测的，不是把文件大小加起来，所以它和 `df` 一致。文件与别处共享存储时这个数会更小；同时有别的程序在写盘，它也会有偏差。',
+    failed: '未能删除',
+    rejected: '在删除前被拒绝',
+    rejectedNote:
+      '它们通过了先前的检查，但没通过紧贴删除动作的那次检查 —— 说明这期间磁盘上发生了变化。',
+    nothingRemoved: '没有删除任何内容。',
+    batch: '记录编号',
+    done: '完成',
+  },
+  privacy: {
+    dev: '当前是开发版本，以裸二进制运行：这项权限属于启动它的终端，而不属于 SpaceMaster。请把权限授予你的终端，或者用打包后的 app 来测试。',
+    openSettings: '打开系统设置',
+  },
+  failures: {
+    permissionDenied: 'macOS 拒绝了访问，可能需要「完全磁盘访问权限」。',
+    inaccessible: '轮到它时已经不存在或读不到了。',
+    failed: 'macOS 报告了一个错误。',
+  },
+  ledger: {
+    unfinished: '上一次清理没有正常结束，当时已经删除了 {{count}} 个条目。',
+    dismiss: '知道了',
+  },
+  history: {
+    title: '历史记录',
+    intro:
+      '这个 app 执行过的每一次清理，都是当时逐条记下来的。这里没有恢复功能：移到废纸篓的用 Finder 的「放回原处」，永久删除的已经不在了。',
+    empty: '还没有删除过任何东西。',
+    modeTrash: '已移到废纸篓',
+    modePermanent: '已永久删除',
+    showPaths: '查看路径',
+    hidePaths: '收起路径',
+    failedCount: '{{count}} 项未删除',
+    notRemoved: '未删除',
+    interrupted: '这次清理没有跑完。最后列出的那条之后的条目根本没有被尝试。',
+  },
+  catalog: {
+    npmCacache: {
+      title: 'npm 包缓存',
+      description: '已下载的包。npm 需要时会重新下载。',
+    },
+    npmLogs: {
+      title: 'npm 调试日志',
+      description: 'npm 命令失败时写下的日志。',
+    },
+    homebrewCache: {
+      title: 'Homebrew 下载缓存',
+      description: '已安装 formula 的安装包。brew 会重新下载。',
+    },
+    bunInstallCache: {
+      title: 'Bun 包缓存',
+      description: '已下载的包。bun 需要时会重新下载。',
+    },
+    pipCache: {
+      title: 'pip 包缓存',
+      description: '已下载的 wheel 和 HTTP 响应。pip 会重新下载。',
+    },
+    yarnCacheLibrary: {
+      title: 'Yarn 包缓存',
+      description: '已下载的包。Yarn 需要时会重新下载。',
+    },
+    yarnCacheDot: {
+      title: 'Yarn 包缓存（旧路径）',
+      description: '旧版本 Yarn 使用的缓存位置。',
+    },
+    cocoapodsCache: {
+      title: 'CocoaPods 缓存',
+      description: '已下载的 pod 与 spec 数据。pod install 会重建。',
+    },
+    xcodeAppCache: {
+      title: 'Xcode 应用缓存',
+      description: 'Xcode 自身的缓存，不是编译产物，项目照常能编译。',
+    },
+    appLogs: {
+      title: '应用日志',
+      description: '已安装应用写下的诊断日志。',
+    },
+    crashReports: {
+      title: '历史崩溃报告',
+      description: '过去的崩溃报告，只用于事后查看。',
+    },
+    trash: {
+      title: '废纸篓',
+      description: '你已经让 macOS 丢弃的内容。',
+    },
+    cargoRegistry: {
+      title: 'Cargo 依赖仓库',
+      description: '下载的 crate 源码。cargo build 会重新下载并重新编译。',
+    },
+    pubCache: {
+      title: 'Dart/Flutter 包缓存',
+      description: '下载的包。pub get 会重新获取。',
+    },
+    gradleCaches: {
+      title: 'Gradle 缓存',
+      description: '下载的依赖和构建状态。下一次构建会重新获取。',
+    },
+    mavenRepository: {
+      title: 'Maven 本地仓库',
+      description: '下载的构件。Maven 和 Gradle 会按需重新获取。',
+    },
+    goModCache: {
+      title: 'Go 模块缓存',
+      description: '下载的模块。go build 会重新获取。',
+    },
+    cocoapodsRepos: {
+      title: 'CocoaPods spec 仓库',
+      description: '克隆下来的 podspec 仓库。pod repo update 会重新克隆。',
+    },
+    swiftpmCache: {
+      title: 'Swift Package Manager 缓存',
+      description: '克隆的依赖仓库和下载的构件。重新解析依赖时会重新获取。',
+    },
+  },
+  advisories: {
+    pnpmStore: {
+      title: 'pnpm store',
+      description:
+        '它被本机每个项目的 node_modules 以硬链接引用。直接删除几乎不会释放空间，还会破坏已检出的项目；下面这条命令只清理没有被引用的部分。',
+    },
+  },
+  rules: {
+    nulByte: '路径格式不合法。',
+    notAbsolute: '路径不是绝对路径。',
+    nonNormalComponent: '路径中含有「..」这类相对片段。',
+    tooShallow: '路径太靠近磁盘顶层，删除它不安全。',
+    outsideRoots: '路径不在本应用允许清理的任何目录内。',
+    rootNotDeletable: '这个目录与其他软件共用，只能清空内容。',
+    protected: '这个位置受保护，永远不会被删除。',
+    wouldTakeProtected: '删除它会连带删掉一个受保护的位置。',
+    systemBundle: '这属于 macOS 系统本身。',
+    ownAppData: '这是 SpaceMaster 自己的数据。',
+    missing: '路径已经不存在了。',
+    symlink: '这是指向别处的快捷方式，因此不作处理。',
+    notFileOrDir: '这既不是文件也不是文件夹。',
+    otherVolume: '这在另一块磁盘上。',
+    pathAliased: '路径实际解析到了它所指位置之外的地方。',
+    appRunning: '拥有它的应用正在运行。',
+    permanentNotAllowed: '这个位置不允许永久删除。',
+    overlapping: '已选中的另一项包含了它。',
+  },
+  issues: {
+    permissionDenied: '无法读取',
+    symlinkSkipped: '快捷方式，未跟随',
+    otherVolumeSkipped: '在另一块磁盘上',
+    readError: '读取失败',
+    missing: '扫描过程中消失',
+  },
+  crash: {
+    title: '界面出错了',
+    body: '界面有一部分没能画出来。这不会删除任何东西 —— 删除只在你按下按钮时发生，而且每一次都记在「历史记录」里。',
+    reload: '重新加载',
+  },
+  errors: {
+    invalidPath: '路径无效：{{detail}}',
+    io: '磁盘操作失败：{{detail}}',
+    scan: '扫描无法启动：{{detail}}',
+    staleScan: '这些结果已经过期，请重新扫描。',
+    stalePlan: '这份清理计划已失效，请重新查看选择。',
+    unknown: '发生未预期的错误：{{detail}}',
+  },
+}

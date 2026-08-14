@@ -1,0 +1,480 @@
+/* The document never scrolls (see index.css), so this is the scroll container. */
+.shell {
+  height: 100%;
+  overflow-y: auto;
+  padding: 40px 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.shell__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.shell__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.shell__sub {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.placeholder {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-faint);
+}
+
+.alert {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(217, 105, 79, 0.4);
+  border-radius: 8px;
+  background: rgba(217, 105, 79, 0.1);
+  color: var(--danger);
+  font-size: 13px;
+}
+
+.card {
+  padding: 22px 24px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-elevated);
+}
+
+.card__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.card__title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.card__path {
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+.bar {
+  height: 10px;
+  border-radius: 5px;
+  background: var(--bg-sunken);
+  overflow: hidden;
+}
+
+.bar__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #6ba3e6);
+}
+
+.stats {
+  display: flex;
+  gap: 40px;
+  margin: 20px 0 0;
+}
+
+.stats__item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stats__label {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.stats__value {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.stats__value--ok {
+  color: var(--ok);
+}
+
+.card__note {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--text-dim);
+  max-width: 62ch;
+}
+
+.notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-sunken);
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+/* An advisory's body runs to several lines, so its button sits at the top rather
+   than floating in the vertical middle of the paragraph. */
+.notice--block {
+  align-items: flex-start;
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin: 0 0 16px;
+}
+
+.tab {
+  padding: 7px 14px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: none;
+  color: var(--text-dim);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.tab:hover {
+  color: var(--text);
+}
+
+.tab--on {
+  border-color: var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.btn {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--bg-elevated);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--text-faint);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.btn--primary {
+  border-color: transparent;
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn--primary:hover:not(:disabled) {
+  border-color: transparent;
+  filter: brightness(1.08);
+}
+
+.btn--quiet {
+  border-color: transparent;
+  background: none;
+  color: var(--text-dim);
+}
+
+/* One confidence bucket on the leftovers page. */
+.group {
+  margin-top: 18px;
+}
+
+.group__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  list-style-position: outside;
+}
+
+.group__title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Confidence as colour, so a group reads before its heading does. */
+.group__title--likely {
+  color: var(--ok);
+}
+
+.group__title--possible {
+  color: var(--warn);
+}
+
+.group__title--unclear,
+.group__title--keep {
+  color: var(--text-dim);
+}
+
+.group__count {
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+/* Evidence, as short verifiable facts rather than a score. */
+.chips {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  padding: 2px 8px;
+  border: 1px solid rgba(86, 177, 137, 0.4);
+  border-radius: 999px;
+  background: rgba(86, 177, 137, 0.1);
+  color: var(--ok);
+  font-size: 11px;
+}
+
+.chip--against {
+  border-color: rgba(214, 162, 79, 0.4);
+  background: rgba(214, 162, 79, 0.1);
+  color: var(--warn);
+}
+
+.places {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+}
+
+.places__row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 4px 0;
+}
+
+.places__where {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.places__row .row__path {
+  flex: 1;
+  margin: 0;
+}
+
+.rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+
+.row--empty {
+  opacity: 0.45;
+}
+
+.row__check {
+  margin: 2px 0 0;
+  accent-color: var(--accent);
+}
+
+/* Keeps the body aligned with the ticked rows above it when there is no checkbox. */
+.row__check--locked {
+  display: inline-block;
+  width: 13px;
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.row__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.row__title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.row__desc {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.row__path {
+  margin: 4px 0 0;
+  font-size: 11px;
+  color: var(--text-faint);
+  overflow-wrap: anywhere;
+}
+
+.row__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.row__size {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.row__files {
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.stats--tight {
+  margin: 0;
+  gap: 28px;
+}
+
+.stats--tight .stats__value {
+  font-size: 15px;
+}
+
+.plan {
+  margin-top: 20px;
+  padding: 20px 22px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-sunken);
+}
+
+.plan__heading {
+  margin: 18px 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.plan__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.plan__row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 6px 0;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+}
+
+.plan__item {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* The name the user ticked, above the path. Reading order matters here: the row is
+   how someone checks that the plan matches what they selected. */
+.plan__name {
+  color: var(--text);
+  font-size: 12px;
+}
+
+.plan__path {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--text-dim);
+}
+
+.plan__item .plan__path {
+  flex: none;
+  font-size: 11px;
+}
+
+.plan__kind,
+.plan__reason {
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.plan__row--rejected .plan__reason {
+  color: var(--danger);
+}
+
+.plan__size {
+  flex-shrink: 0;
+  font-weight: 600;
+}
+
+.plan__note {
+  margin: 8px 0 0;
+  font-size: 11px;
+  color: var(--text-faint);
+  max-width: 70ch;
+}
+
+.locale {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.locale__select {
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-elevated);
+  color: var(--text);
+  font: inherit;
+}

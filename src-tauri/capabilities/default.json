@@ -1,0 +1,8 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Main window capabilities. fs/shell are deliberately excluded: every filesystem and process operation goes through a custom Rust command.",
+  "windows": ["main"],
+  "platforms": ["macOS"],
+  "permissions": ["core:default"]
+}

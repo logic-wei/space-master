@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>LSApplicationCategoryType</key>
+  <string>public.app-category.utilities</string>
+
+  <key>NSHumanReadableCopyright</key>
+  <string>Local build. Not for distribution.</string>
+
+  <!-- No NSDesktopFolderUsageDescription / NSDocumentsFolderUsageDescription /
+       NSDownloadsFolderUsageDescription, on purpose. Those are the explanatory text for
+       the Files-and-Folders consent prompt, which this app never triggers: Desktop,
+       Documents and Downloads are on the Guard's deny list and there is no folder picker
+       anywhere in the interface. Declaring a purpose for access the app deliberately
+       cannot have would be a promise it has no way to keep.
+
+       Full Disk Access, the one permission this app does ask for, has no purpose string
+       at all — it is granted in System Settings, which is what `open_privacy_settings`
+       opens. So there is nothing here for a .lproj to localize either. -->
+
+  <key>NSSupportsAutomaticGraphicsSwitching</key>
+  <true/>
+  <key>LSMultipleInstancesProhibited</key>
+  <true/>
+</dict>
+</plist>

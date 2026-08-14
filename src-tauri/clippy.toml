@@ -1,0 +1,8 @@
+# Deletion must stay confined to the `remove/` module. Calling these from anywhere
+# else is a compile error under `cargo clippy -- -D warnings`.
+# `remove/permanent.rs` carries the single `#[allow]` exemption.
+disallowed-methods = [
+  { path = "std::fs::remove_file", reason = "only callable inside the remove/ module" },
+  { path = "std::fs::remove_dir", reason = "only callable inside the remove/ module" },
+  { path = "std::fs::remove_dir_all", reason = "only callable inside the remove/ module" },
+]

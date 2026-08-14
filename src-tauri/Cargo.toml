@@ -1,0 +1,46 @@
+[package]
+name = "space-master"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.85"
+publish = false
+
+[lib]
+name = "space_master_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.6.3", features = [] }
+
+[dependencies]
+tauri = { version = "2.11.5", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+libc = "0.2"
+# Process enumeration for Guard rule R10. Only the process list is refreshed.
+sysinfo = { version = "0.39", default-features = false, features = ["system"] }
+# Reading CFBundleIdentifier out of Info.plist.
+plist = "1.10"
+jwalk = "0.9"
+rayon = "1.12.0"
+# Trash on macOS. `chrono` (a default feature) only serves `os_limited` listing,
+# which is not available on macOS, so default features are off.
+trash = { version = "5.2", default-features = false }
+# A second instance would keep a second ledger of its own deletions, and two batches
+# starting in the same millisecond could take the same id. `LSMultipleInstancesProhibited`
+# covers the bundled app; this covers everything else that can start a process.
+tauri-plugin-single-instance = "2.4.3"
+
+[dev-dependencies]
+tempfile = "3"
+proptest = "1.11"
+
+[profile.release]
+lto = true
+codegen-units = 1
+# Deliberately not `panic = "abort"`: the delete loop relies on unwinding so a
+# single panicking entry still leaves the ledger flushed and lets the rest of the
+# batch proceed.
+panic = "unwind"
+strip = true

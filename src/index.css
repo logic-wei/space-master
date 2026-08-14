@@ -1,0 +1,50 @@
+:root {
+  --bg: #16181f;
+  --bg-elevated: #1e212b;
+  --bg-sunken: #12141a;
+  --border: #2c3140;
+  --text: #e8ebf2;
+  --text-dim: #949cb0;
+  --text-faint: #6b7285;
+  --accent: #4f8cd6;
+  --warn: #d6a24f;
+  --danger: #d9694f;
+  --ok: #56b189;
+
+  color-scheme: dark;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  /* The window is the app; the document itself must never scroll. */
+  overflow: hidden;
+  /* Selectable text is a liability in a tool whose rows represent real files. */
+  user-select: none;
+  cursor: default;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: default;
+}
+
+/* Tabular figures keep byte counts from jittering as they update. */
+.num {
+  font-variant-numeric: tabular-nums;
+}

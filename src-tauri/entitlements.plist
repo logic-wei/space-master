@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!-- Placeholder: v1 is unsigned and macOS.entitlements in tauri.conf.json is
+       still null. Point that field at this file once signing starts. -->
+
+  <!-- App Sandbox is deliberately off: a sandboxed app cannot reach other apps'
+       ~/Library data, which is exactly what this tool exists to clean. -->
+  <key>com.apple.security.app-sandbox</key>
+  <false/>
+
+  <!-- Needed to spawn xcrun/simctl subprocesses under Hardened Runtime. -->
+  <key>com.apple.security.cs.disable-library-validation</key>
+  <true/>
+</dict>
+</plist>
