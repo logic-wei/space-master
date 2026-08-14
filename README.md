@@ -7,6 +7,12 @@ It reclaims **system-level** space only. Caches under `~/Library` and the dotfil
 package managers are in scope; your own project directories are not — `node_modules`, `target` and
 `build` belong to the tools that created them.
 
+![The one-click clean page after a scan: the sidebar carries the nav and the free space on
+the data volume, while each cache is one row with its size, file count and when it was last
+touched. The notice across the top is the app explaining that the Trash cannot be measured
+without Full Disk Access — which is why that row reads "Size unknown" rather than
+zero.](docs/screenshot.png)
+
 ## Two entry points
 
 **One-click clean.** A short, hand-written list of caches whose owning tool rebuilds them by
