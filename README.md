@@ -98,6 +98,12 @@ Tests that read or write the real home directory are `#[ignore]`d; `cargo test -
 them. Among them are acceptance harnesses (`src-tauri/tests/review_*.rs`) that print what a scan
 decided, for checking a plan by eye before trusting it.
 
-The build is ad-hoc signed. A Full Disk Access grant is bound to a signature that changes with
-every build, so it has to be granted again after each one; the codesign and notarization
-placeholders in `tauri.conf.json` are there for whenever that becomes worth doing.
+The build is ad-hoc signed (`signingIdentity: "-"`), which is a real signature with the hardened
+runtime and sealed resources — but not a Developer ID one, and not notarized. Two consequences.
+Gatekeeper refuses the first launch on any machine that did not build it, so a recipient has to
+allow it once under System Settings ▸ Privacy & Security, or strip the quarantine flag by hand
+(`xattr -dr com.apple.quarantine /Applications/SpaceMaster.app`). And an ad-hoc signature's hash
+changes with every build, so the Full Disk Access grant is bound to that build alone and has to be
+granted again after each one — including for whoever you hand a new version to. Signing with a
+Developer ID and notarizing removes both problems; `providerShortName` and `entitlements` are left
+in `tauri.conf.json` for whenever the yearly fee is worth it.
