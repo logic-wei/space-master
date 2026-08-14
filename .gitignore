@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Agent tooling: belongs to whoever is running it, not to the project
+.agents
+.claude
+skills-lock.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
